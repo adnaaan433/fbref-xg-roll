@@ -1,0 +1,9 @@
+requests
+pandas
+beautifulsoup4
+selenium
+webdriver-manager
+lxml
+fake-useragent
+streamlit
+html5lib
