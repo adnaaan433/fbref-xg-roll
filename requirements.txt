@@ -1,4 +1,5 @@
 requests
+matplotlib
 pandas
 beautifulsoup4
 selenium
