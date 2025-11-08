@@ -8,3 +8,5 @@ lxml
 fake-useragent
 streamlit
 html5lib
+numpy
+highlight-text
