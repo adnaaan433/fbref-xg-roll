@@ -417,7 +417,7 @@ if url:
                 season_label = str(row['Season'])
                 # Skip the very first season's line but still annotate
                 if x_pos != 1:
-                    ax.axvline(x=x_pos, linestyle='--', color='white', alpha=0.4, linewidth=1)
+                    ax.axvline(x=x_pos, linestyle='--', color='white', alpha=0.75, linewidth=1)
                 # Place season text slightly to the right of start
                 ax.text(x_pos + 0.2, y_max + y_pad, season_label, color='white', fontsize=10, va='bottom')
 
