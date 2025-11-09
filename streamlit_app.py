@@ -467,6 +467,8 @@ if url:
 
         fig.text(0.05, 0.95, "Data: fbref  |  Made by: Mohammad Adnan (@adnaaan433) For the Real Deal Podcast (@Realdealpodz)", color='white', 
                     fontsize=15, ha='left', va='center')
+
+        st.text(raw_match_logs_df.columns.tolist())
         
         # # Add logos to top right corner
         # from matplotlib.offsetbox import OffsetImage, AnnotationBbox
