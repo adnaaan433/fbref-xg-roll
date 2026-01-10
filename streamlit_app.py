@@ -255,6 +255,7 @@ if url:
         
         # Show raw match logs before filtering
         raw_match_logs_df = match_logs_df.copy()
+        st.dataframe(raw_match_logs_df)
         
         # Add Season column to raw dataframe based on Date and 'Matchweek 1' in Round
         if 'Date' in raw_match_logs_df.columns and 'Round' in raw_match_logs_df.columns:
