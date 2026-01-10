@@ -255,43 +255,33 @@ if url:
         
         # Show raw match logs before filtering
         raw_match_logs_df = match_logs_df.copy()
-        st.dataframe(raw_match_logs_df)
+        # st.dataframe(raw_match_logs_df) # Debugging the season data issue
         
-        # Add Season column to raw dataframe based on Date and 'Matchweek 1' in Round
-        if 'Date' in raw_match_logs_df.columns and 'Round' in raw_match_logs_df.columns:
+        # Add Season column to raw dataframe based on Date
+        # Logic: If month >= 8 (August), season is Year-(Year+1). Else (Year-1)-Year.
+        if 'Date' in raw_match_logs_df.columns:
             raw_match_logs_df['Date'] = pd.to_datetime(raw_match_logs_df['Date'], errors='coerce')
-            season_labels = []
-            # Determine first valid year for initial season
-            first_valid_year = None
-            for dt in raw_match_logs_df['Date']:
-                if pd.notna(dt):
-                    first_valid_year = dt.year
-                    break
-            if first_valid_year is None:
-                raw_match_logs_df['Season'] = ''
-            else:
-                current_start_year = first_valid_year
-                def format_season(start_year: int) -> str:
-                    return f"{start_year}-{str((start_year + 1) % 100).zfill(2)}"
-                current_season = format_season(current_start_year)
-                for i, row in raw_match_logs_df.iterrows():
-                    round_val = str(row.get('Round', '')).strip()
-                    date_val = row.get('Date')
-                    if isinstance(round_val, str) and round_val.lower() == 'matchweek 1' and pd.notna(date_val):
-                        current_start_year = int(date_val.year)
-                        current_season = format_season(current_start_year)
-                    season_labels.append(current_season)
-                raw_match_logs_df['Season'] = pd.Series(season_labels, index=raw_match_logs_df.index).astype(str)
+            
+            def get_season(dt):
+                if pd.isna(dt):
+                    return ""
+                year = dt.year
+                month = dt.month
+                # If month is August (8) or later, the season starts in this year
+                if month >= 8:
+                    start_year = year
+                else:
+                    # If month is before August, it's the end of the season starting previous year
+                    start_year = year - 1
+                return f"{start_year}-{str(start_year + 1)[-2:]}"
+
+            raw_match_logs_df['Season'] = raw_match_logs_df['Date'].apply(get_season)
         else:
             raw_match_logs_df['Season'] = ''
 
         # Propagate Season to working dataframe
         if 'Season' in raw_match_logs_df.columns:
-            try:
-                match_logs_df['Season'] = raw_match_logs_df['Season']
-            except Exception:
-                common_idx = match_logs_df.index.intersection(raw_match_logs_df.index)
-                match_logs_df.loc[common_idx, 'Season'] = raw_match_logs_df.loc[common_idx, 'Season']
+            match_logs_df['Season'] = raw_match_logs_df['Season']
         
         # Filter dataframe to keep only specified columns
         columns_to_keep = ['Date', 'Comp', 'Round', 'Squad', 'Opponent', 
@@ -305,7 +295,7 @@ if url:
         top5_league_ucl = ['Champions Lg', 'Europa Lg',
                             'La Liga', 'Premier League', 'Serie A', 'Bundesliga', 'Ligue 1']
         match_logs_df = match_logs_df[match_logs_df['Comp'].isin(top5_league_ucl)]
-        st.dataframe(match_logs_df)
+        # st.dataframe(match_logs_df) # Debugging the season data issue
         
         # Let user choose how many previous seasons to include (max 5)
         st.markdown("---")
