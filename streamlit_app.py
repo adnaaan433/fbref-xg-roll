@@ -305,6 +305,7 @@ if url:
         top5_league_ucl = ['Champions Lg', 'Europa Lg',
                             'La Liga', 'Premier League', 'Serie A', 'Bundesliga', 'Ligue 1']
         match_logs_df = match_logs_df[match_logs_df['Comp'].isin(top5_league_ucl)]
+        st.dataframe(match_logs_df)
         
         # Let user choose how many previous seasons to include (max 5)
         st.markdown("---")
